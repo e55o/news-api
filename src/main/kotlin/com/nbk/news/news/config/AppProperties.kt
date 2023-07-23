@@ -11,4 +11,10 @@ class AppProperties {
 
     @Value("\${news.api.baseUrl}")
     lateinit var newsApiBaseUrl: String;
+
+    @Value("\${news.jwt.secret}")
+    lateinit var secretKey: String
+
+    @Value("\${news.jwt.expiration}")
+    lateinit var expirationTime: Number
 }
