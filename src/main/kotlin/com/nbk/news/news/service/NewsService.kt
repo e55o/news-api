@@ -1,6 +1,7 @@
 package com.nbk.news.news.service
 
 import com.nbk.news.news.client.NewsApiHttpClient
+import com.nbk.news.news.config.AppProperties
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -10,6 +11,7 @@ import java.lang.Exception
 @Service
 class NewsService {
     private val logger = LoggerFactory.getLogger(javaClass)
+
     @Autowired
     private val newsHttpClient = NewsApiHttpClient();
 
@@ -28,7 +30,6 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
-            return ResponseEntity.internalServerError().body("Failed to communicate with News API: $exception")
         }
 
         return ResponseEntity.ok(response);
@@ -43,7 +44,6 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
-            return ResponseEntity.internalServerError().body("Failed to communicate with News API: $exception")
         }
 
         return ResponseEntity.ok(response);
