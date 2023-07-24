@@ -167,7 +167,9 @@ and you will get the actual file in the response
 
 For testing, I used Cucumber + Mockito with Gherkin feature files
 
-I was able to achieve ~80% code coverage (90% class coverage, 74% line coverage)
+These are the test coverage results
+
+![Test results](https://github.com/e55o/news-api/assets/31523264/a901a80d-457f-46ba-a458-37096306673a)
 
 You can run the tests using IntelliJ IDEA coverage runner.
 
