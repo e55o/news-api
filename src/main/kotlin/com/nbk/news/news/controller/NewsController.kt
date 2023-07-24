@@ -18,7 +18,7 @@ class NewsController(val newsService: NewsService) {
 
 
     @GetMapping("/top-headlines")
-    fun getTopHeadlines(@ModelAttribute request: TopHeadlinesRequestDto?, pageSize: Int, pageNumber: Int): ResponseEntity<Any> {
+    fun getTopHeadlines(@ModelAttribute request: TopHeadlinesRequestDto?): ResponseEntity<Any> {
         logger.info("Fetching top headlines");
         return newsService.getTopHeadlines(request?.search, request?.pageSize, request?.pageNumber);
     }

@@ -28,6 +28,7 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
+            return ResponseEntity.internalServerError().body("Failed to communicate with News API: $exception")
         }
 
         return ResponseEntity.ok(response);
@@ -42,6 +43,7 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
+            return ResponseEntity.internalServerError().body("Failed to communicate with News API: $exception")
         }
 
         return ResponseEntity.ok(response);
