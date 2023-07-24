@@ -20,10 +20,14 @@ class NewsService {
                                 pageNumber: Int?): ResponseEntity<Any> {
         logger.info("Getting top headlines for user");
 
-        val queryMap = mapOf(
+        val queryMap = mutableMapOf(
             "page" to pageNumber.toString(),
             "pageSize" to pageSize.toString(),
             "country" to "us");
+
+        if(search != null) {
+            queryMap["q"] = search
+        }
         var response: Any? = null;
         try {
             response = newsHttpClient.get("/v2/top-headlines", queryMap);
