@@ -1,8 +1,9 @@
 package com.nbk.news.news.service
 
 import com.nbk.news.news.config.AppProperties
-import com.nbk.news.news.exception.BadToken
+import com.nbk.news.news.exception.BadTokenException
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
@@ -10,7 +11,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
-import java.lang.Exception
+import java.lang.RuntimeException
 import java.security.Key
 import java.util.*
 
@@ -40,8 +41,8 @@ class JwtService @Autowired constructor(private val appProperties: AppProperties
                 .build()
                 .parseClaimsJws(token)
                 .body
-        } catch (e: Exception) {
-            throw BadToken("Invalid Token");
+        } catch (e: JwtException) {
+            throw BadTokenException("Invalid Token")
         }
     }
 

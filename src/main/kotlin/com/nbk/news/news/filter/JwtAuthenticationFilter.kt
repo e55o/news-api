@@ -1,5 +1,6 @@
 package com.nbk.news.news.filter
 
+import com.nbk.news.news.exception.BadTokenException
 import com.nbk.news.news.service.JwtService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -30,24 +31,28 @@ class JwtAuthenticationFilter (
             return
         }
 
-        val lengthOfBearerWithSpace = 7
-        val jwtToken = authHeader.substring(lengthOfBearerWithSpace)
-        val username = jwtService.extractUsername(jwtToken)
+        try {
 
-        if (SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = userDetailsService.loadUserByUsername(username)
+            val lengthOfBearerWithSpace = 7
+            val jwtToken = authHeader.substring(lengthOfBearerWithSpace)
+            val username = jwtService.extractUsername(jwtToken)
 
-            if (jwtService.isTokenValid(jwtToken, userDetails)) {
-                val authenticationToken = UsernamePasswordAuthenticationToken(
-                    userDetails,
-                    null,
-                    userDetails.authorities
-                )
-                authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
-                SecurityContextHolder.getContext().authentication = authenticationToken
+            if (SecurityContextHolder.getContext().authentication == null) {
+                val userDetails = userDetailsService.loadUserByUsername(username)
+
+                if (jwtService.isTokenValid(jwtToken, userDetails)) {
+                    val authenticationToken = UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.authorities
+                    )
+                    authenticationToken.details = WebAuthenticationDetailsSource().buildDetails(request)
+                    SecurityContextHolder.getContext().authentication = authenticationToken
+                }
             }
+            filterChain.doFilter(request, response)
+        } catch (ex: BadTokenException) {
+            throw BadTokenException("Invalid token");
         }
-        filterChain.doFilter(request, response)
-
     }
 }

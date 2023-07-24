@@ -2,6 +2,7 @@ package com.nbk.news.news.client
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.nbk.news.news.config.AppProperties
+import com.nbk.news.news.exception.ResourceNotFoundException
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -42,7 +43,7 @@ class NewsApiHttpClient {
             val responseBody = response.body?.string()
             return mapper.readValue(responseBody, Any::class.java);
         } else {
-            throw Exception("Error fetching data from NewsAPI: $response")
+            throw ResourceNotFoundException("Error fetching data from NewsAPI: $response")
         }
     }
 }

@@ -2,9 +2,11 @@ package com.nbk.news.news.exception
 
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
+import java.lang.Exception
 
 @ControllerAdvice
 class CustomExceptionHandler {
@@ -12,20 +14,29 @@ class CustomExceptionHandler {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @ExceptionHandler(RegisteredException::class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    fun handleRegisteredException(e: RegisteredException): ResponseError {
-        logger.error(e.message, e)
-        return ResponseError.ALREADY_REGISTERED
+    fun handleRegisteredException(ex: RegisteredException): ResponseEntity<String> {
+        logger.error(ex.message, ex)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
     }
 
-    @ExceptionHandler(BadToken::class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    fun handleBadTokenException(e: BadToken): ResponseError {
-        logger.error(e.message, e)
-        return ResponseError.BAD_CREDENTIALS
+    @ExceptionHandler(BadTokenException::class)
+    fun handleBadTokenException(ex: BadTokenException): ResponseEntity<String> {
+        logger.error(ex.message, ex)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+    }
+
+    @ExceptionHandler(ResourceNotFoundException::class)
+    fun handleResourceNotFoundException(ex: ResourceNotFoundException): ResponseEntity<String> {
+        logger.error(ex.message, ex)
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.message)
     }
 }
 
-class RegisteredException(message: String) : RuntimeException(message)
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class ResourceNotFoundException(message: String) : Exception(message)
 
-class BadToken(message: String) : RuntimeException(message)
+@ResponseStatus(HttpStatus.CONFLICT)
+class RegisteredException(message: String) : Exception(message)
+
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+class BadTokenException(message: String) : Exception(message)
