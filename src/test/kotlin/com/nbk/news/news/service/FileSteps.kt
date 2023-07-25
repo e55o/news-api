@@ -3,6 +3,7 @@ package com.nbk.news.news.service
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
+import junit.framework.TestCase
 import org.apache.http.HttpEntity
 import org.apache.http.client.methods.CloseableHttpResponse
 import org.apache.http.impl.client.CloseableHttpClient
@@ -38,18 +39,15 @@ class FileServiceSteps {
     fun whenIRequestTheFile() {
         try {
             fileService.getFile("https://example.com/sample.txt")
-
         } catch (e: Exception) {
         }
     }
 
     @Then("the file should be downloaded successfully")
     fun thenTheFileShouldBeDownloadedSuccessfully() {
+        TestCase.assertNotNull(response)
     }
 
-    @Then("the file should have the name {string}")
-    fun thenTheFileShouldHaveTheName(fileName: String) {
-    }
 
     // added to mock the ClosableHttpClient correctly
     private fun <T> any(): T {
