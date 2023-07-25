@@ -2,6 +2,12 @@
 
 This is a small service that consumes some APIs from NewsAPI
 
+It uses JWT + Spring security framework for authenticated APIs protection
+
+SignIn and SignUp endpoints are public under `/api/public/*`
+
+The other endpoints are under the path `/api/*`
+
 ### How to set up
 
 Make sure to have MSSQL dB, create a database (ex. `newsdb`)
@@ -30,7 +36,10 @@ news.jwt.secret=342tkm4t445645yl45ylmgkl454543232342rerewpl432erw3kl21312khe2ea
 news.jwt.expiration=300000 // in milliseconds
 ```
 
-Then run the app using `mvn clean spring-boot:run`
+Then run the app using 
+```shell
+mvn clean spring-boot:run
+```
 
 > You can test the endpoints using the POSTMAN collection available in the project root directory.
 Make sure to change the collection variable `baseUrl` to your suitable url
@@ -41,15 +50,15 @@ To consume these APIs, the user needs to have a valid token.
 
 To get a token, the user needs to be registered.
 
-Once a user registers, his data will be stored to the `users` table in the `newsdb`
+Once a user registers, his data will be stored to the `users` table in the `newsdb` with a default role `USER`, for simplicity we are only using one role.
 
-Once registered, the user needs to sign in, in the response of the sign in endpoint the user will receive a JWT token
+Once registered, the user needs to sign in, to receive a JWT token that will last based on the JWT expiration date (ms)
 
 Then the user can use this token to call the protected endpoints.
 
 ### API documentation:
 
-Call the registration API:
+Registration API:
 ```curl
 POST /api/public/users/signup
 ```
@@ -75,7 +84,7 @@ Status: `200 OK`
 
 ---
 
-Sign in using
+Sign in API:
 ```curl
 POST /api/public/users/signin
 ```
@@ -96,7 +105,7 @@ Response Sample:
 ---
 For the rest of the endpoint you need to use a valid token to be able to call it:
 
-Get top headlines
+Get top headlines API
 
 ```curl
 GET /api/news/top-headlines?pageNumber=1&pageSize=10&search=a
@@ -126,14 +135,13 @@ Response sample:
 }
 ```
 ---
-Get top headlines
+Get top headline sources API
 
 ```curl
 GET /api/news/sources
 ```
 
 Response Sample:
-
 ```json
 {
   "status": "ok",
@@ -154,13 +162,12 @@ Response Sample:
 ---
 
 Downloading a file from URL
-
 ```curl
 POST /api/file?url=https://www.africau.edu/images/default/sample.pdf
 ```
 you can send any file url in the query param `url`
 
-and you will get the actual file in the response
+and you will get the actual file as binary data in the response
 
 
 ## Testing
