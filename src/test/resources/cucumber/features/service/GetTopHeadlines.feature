@@ -8,4 +8,4 @@ Feature: Get top headlines
   Scenario: Exception from newsHttpClient
     Given the newsHttpClient throws an exception
     When the user calls the getTopHeadlines API with pageSize 10 and pageNumber 1
-    Then the response status should be 200 OK
+    Then the response should throw exception

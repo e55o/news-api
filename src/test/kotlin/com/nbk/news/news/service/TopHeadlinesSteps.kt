@@ -5,6 +5,7 @@ import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -25,7 +26,7 @@ class TopHeadlinesSteps {
 
     init {
         MockitoAnnotations.initMocks(this)
-        newsService = NewsService()
+        newsService = NewsService(mockNewsHttpClient)
     }
 
     @Given("the newsHttpClient returns a successful response")
@@ -41,21 +42,8 @@ class TopHeadlinesSteps {
         `when`(mockNewsHttpClient.get("/v2/top-headlines", queryMap)).thenReturn(mockResponse)
     }
 
-    @Given("the newsHttpClient throws an exception")
-    fun mockNewsHttpClientException() {
-        val pageSize = 10
-        val pageNumber = 1
-        val queryMap = mapOf(
-            "page" to pageNumber.toString(),
-            "pageSize" to pageSize.toString(),
-            "country" to "us"
-        )
-        val mockException = RuntimeException("Some exception message")
-        `when`(mockNewsHttpClient.get("/v2/top-headlines", queryMap)).thenThrow(mockException)
-    }
-
     @When("the user calls the getTopHeadlines API with pageSize {int} and pageNumber {int}")
-    fun callGetTopHeadlinesAPI(pageSize: Int, pageNumber: Int) {
+    fun callGetTopHeadlines(pageSize: Int, pageNumber: Int) {
         try {
             response = newsService.getTopHeadlines(null, pageSize, pageNumber)
         } catch (ex: Exception) {
@@ -69,8 +57,21 @@ class TopHeadlinesSteps {
         assertEquals("200", response?.statusCode?.value().toString())
     }
 
-    @Then("the response body should be {string}")
-    fun checkTopHeadlinesResponseBody(expectedBody: String) {
-        assertEquals(expectedBody, response?.body)
+    @Given("the newsHttpClient throws an exception")
+    fun mockNewsHttpClientException() {
+        val pageSize = 10
+        val pageNumber = 1
+        val queryMap = mapOf(
+            "page" to pageNumber.toString(),
+            "pageSize" to pageSize.toString(),
+            "country" to "us"
+        )
+        val mockException = RuntimeException("Some exception message")
+        `when`(mockNewsHttpClient.get("/v2/top-headlines", queryMap)).thenThrow(mockException)
+    }
+
+    @Then("the response should throw exception")
+    fun checkTopHeadlinesResponseBody() {
+        assertNotNull(exception)
     }
 }

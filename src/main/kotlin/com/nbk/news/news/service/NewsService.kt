@@ -2,6 +2,7 @@ package com.nbk.news.news.service
 
 import com.nbk.news.news.client.NewsApiHttpClient
 import com.nbk.news.news.config.AppProperties
+import com.nbk.news.news.exception.ResourceNotFoundException
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -9,11 +10,8 @@ import org.springframework.stereotype.Service
 import java.lang.Exception
 
 @Service
-class NewsService {
+class NewsService @Autowired constructor(val newsHttpClient: NewsApiHttpClient) {
     private val logger = LoggerFactory.getLogger(javaClass)
-
-    @Autowired
-    private val newsHttpClient = NewsApiHttpClient();
 
     fun getTopHeadlines(search: String?,
                                 pageSize: Int?,
@@ -34,6 +32,7 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
+            throw ResourceNotFoundException("Couldn't fetch data from NewsAPI")
         }
 
         return ResponseEntity.ok(response);
@@ -48,6 +47,7 @@ class NewsService {
 
         } catch (exception :Exception) {
             logger.error(exception.toString());
+            throw ResourceNotFoundException("Couldn't fetch data from NewsAPI")
         }
 
         return ResponseEntity.ok(response);

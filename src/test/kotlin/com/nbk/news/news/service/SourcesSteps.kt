@@ -1,11 +1,11 @@
 package com.nbk.news.news.service
 
 import com.nbk.news.news.client.NewsApiHttpClient
-import com.nbk.news.news.config.AppProperties
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.Then
 import io.cucumber.java.en.When
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -18,9 +18,6 @@ class SourcesSteps {
     @Mock
     private lateinit var mockNewsHttpClient: NewsApiHttpClient
 
-    @Mock
-    private lateinit var appProperties: AppProperties
-
     @InjectMocks
     private var newsService: NewsService
 
@@ -29,17 +26,27 @@ class SourcesSteps {
 
     init {
         MockitoAnnotations.initMocks(this)
-        newsService = NewsService()
+        newsService = NewsService(mockNewsHttpClient)
+    }
+
+    init {
+        MockitoAnnotations.initMocks(this)
+        newsService = NewsService(mockNewsHttpClient)
     }
 
     @Given("the newsHttpClient returns a successful response for getting sources")
     fun mockNewsHttpClientResponse() {
         val mockResponse = ResponseEntity.ok("Sources response")
-        `when`(appProperties.newsApiBaseUrl).thenReturn("https://newsapi.org");
         `when`(mockNewsHttpClient.get("/v2/top-headlines/sources")).thenReturn(mockResponse)
     }
 
-    @When("the user calls the getSources API")
+    @Given("the newsHttpClient throws an exception for getSources")
+    fun newsHttpClientException() {
+        val mockException = RuntimeException("Some exception message")
+        `when`(mockNewsHttpClient.get("/v2/top-headlines/sources")).thenThrow(mockException)
+    }
+
+    @When("the user calls the getSources")
     fun callGetSourcesAPI() {
         try {
             response = newsService.getSources()
@@ -53,8 +60,8 @@ class SourcesSteps {
         assertEquals(HttpStatus.valueOf(statusCode), response?.statusCode)
     }
 
-    @Then("the source response body should be {string}")
-    fun checkSourceResponseBody(expectedBody: String) {
-        assertEquals(expectedBody, response?.body)
+    @Then("the source service should throw exception")
+    fun checkSourceResponseBody() {
+        assertNotNull(exception)
     }
 }
