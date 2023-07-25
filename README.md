@@ -169,7 +169,7 @@ For testing, I used Cucumber + Mockito with Gherkin feature files
 
 These are the test coverage results
 
-![Test results](https://github.com/e55o/news-api/assets/31523264/3b8f603b-9c99-40bb-98ed-7673f3c5c614)
+![Test results](https://github.com/e55o/news-api/assets/31523264/de8308af-5eb2-4cc3-98b9-0126d7b83b59)
 
 You can run the tests using IntelliJ IDEA coverage runner.
 
