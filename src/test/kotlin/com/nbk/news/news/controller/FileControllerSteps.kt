@@ -9,7 +9,7 @@ import io.cucumber.java.en.When
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
-import org.springframework.core.io.InputStreamResource
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity
 
 class FileControllerSteps {
@@ -20,7 +20,7 @@ class FileControllerSteps {
     @InjectMocks
     private var fileController: FileController
 
-    private var response: ResponseEntity<InputStreamResource>? = null
+    private var response: ResponseEntity<ByteArrayResource>? = null
     private var exception: Exception? = null
 
     init {

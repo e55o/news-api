@@ -3,7 +3,7 @@ package com.nbk.news.news.controller
 import com.nbk.news.news.dto.FileDto
 import com.nbk.news.news.service.FileService
 import org.slf4j.LoggerFactory
-import org.springframework.core.io.InputStreamResource
+import org.springframework.core.io.ByteArrayResource
 import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +18,7 @@ class FileController(val fileService: FileService) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @GetMapping()
-    fun getFile(@ModelAttribute request: FileDto): ResponseEntity<InputStreamResource> {
+    fun getFile(@ModelAttribute request: FileDto): ResponseEntity<ByteArrayResource> {
         logger.info("Downloading file from {}", request.url);
         return fileService.getFile(request.url);
     }
